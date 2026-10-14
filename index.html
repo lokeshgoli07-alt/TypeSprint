@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TypeSprint — Modern Precision Typing Practice</title>
+  <meta name="description" content="TypeSprint is a modern, responsive, distraction-free typing speed trainer featuring real-time WPM analytics, customizable durations, difficulty tiers, and realistic mechanical audio feedback.">
+  <meta name="theme-color" content="#0a0e1a">
+
+  <!-- Typography: Google Fonts with robust local system monospace fallbacks -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Core Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Background Glow Orbs for Modern Ambient Aesthetic -->
+  <div class="ambient-glow glow-top-left" aria-hidden="true"></div>
+  <div class="ambient-glow glow-bottom-right" aria-hidden="true"></div>
+
+  <div class="app-wrapper">
+    <!-- HEADER BAR -->
+    <header class="app-header">
+      <div class="header-brand">
+        <div class="logo-icon-box">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="4" width="20" height="16" rx="2.5" ry="2.5"/>
+            <path d="M6 8h.001M10 8h.001M14 8h.001M18 8h.001M6 12h.001M10 12h.001M14 12h.001M18 12h.001M7 16h10"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1 class="logo-title">Type<span class="gradient-text">Sprint</span></h1>
+          <span class="logo-subtitle">Speed & Precision Trainer</span>
+        </div>
+      </div>
+
+      <!-- Quick Action Utility Bar -->
+      <div class="header-actions">
+        <!-- Personal Best Badge -->
+        <div class="best-score-pill" title="Your highest WPM recorded on this device">
+          <span class="trophy-icon">🏆</span>
+          <span class="best-label">Best:</span>
+          <strong id="stat-best-wpm">0 WPM</strong>
+        </div>
+
+        <!-- Audio Toggle Button -->
+        <button id="btn-sound-toggle" class="icon-btn muted" aria-label="Toggle mechanical switch audio feedback" title="Toggle Mechanical Audio Feedback">
+          <span id="sound-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+              <line x1="23" y1="9" x2="17" y2="15"/>
+              <line x1="17" y1="9" x2="23" y2="15"/>
+            </svg>
+          </span>
+          <span id="sound-status-text" class="btn-text-label">Sound: Off</span>
+        </button>
+
+        <!-- Theme Toggle Button -->
+        <button id="btn-theme-toggle" class="icon-btn" aria-label="Toggle Dark / Light Theme" title="Switch Theme">
+          <span id="theme-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="5"/>
+              <line x1="12" y1="1" x2="12" y2="3"/>
+              <line x1="12" y1="21" x2="12" y2="23"/>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+              <line x1="1" y1="12" x2="3" y2="12"/>
+              <line x1="21" y1="12" x2="23" y2="12"/>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+            </svg>
+          </span>
+        </button>
+
+        <!-- History Button -->
+        <button id="btn-view-history" class="icon-btn" aria-label="View typing history" title="Test History">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12 6 12 12 16 14"/>
+          </svg>
+        </button>
+
+        <!-- Instructions Button -->
+        <button id="btn-instructions" class="icon-btn" aria-label="View beginner instructions" title="Beginner Typing Guide">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+            <line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- CONFIGURATION PILLS BAR -->
+    <section class="config-bar" aria-label="Test Settings">
+      <!-- Duration Selector -->
+      <div class="config-group">
+        <span class="config-label">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Duration:
+        </span>
+        <div class="pill-buttons-cluster" role="radiogroup" aria-label="Test Duration">
+          <button type="button" class="duration-pill" data-duration="15" role="radio" aria-checked="false">15s</button>
+          <button type="button" class="duration-pill" data-duration="30" role="radio" aria-checked="false">30s</button>
+          <button type="button" class="duration-pill active" data-duration="60" role="radio" aria-checked="true">60s</button>
+          <button type="button" class="duration-pill" data-duration="120" role="radio" aria-checked="false">120s</button>
+        </div>
+      </div>
+
+      <div class="config-divider" aria-hidden="true"></div>
+
+      <!-- Difficulty Selector -->
+      <div class="config-group">
+        <span class="config-label">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          Difficulty:
+        </span>
+        <div class="pill-buttons-cluster" role="radiogroup" aria-label="Difficulty Level">
+          <button type="button" class="difficulty-pill" data-difficulty="beginner" role="radio" aria-checked="false">Beginner</button>
+          <button type="button" class="difficulty-pill active" data-difficulty="intermediate" role="radio" aria-checked="true">Intermediate</button>
+          <button type="button" class="difficulty-pill" data-difficulty="advanced" role="radio" aria-checked="false">Advanced</button>
+        </div>
+      </div>
+
+      <div class="config-divider" aria-hidden="true"></div>
+
+      <!-- Case Sensitivity Mode Selector -->
+      <div class="config-group">
+        <span class="config-label">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+          Letter Case:
+        </span>
+        <div class="pill-buttons-cluster" role="radiogroup" aria-label="Case Sensitivity Mode">
+          <button type="button" class="case-pill active" data-case="exact" role="radio" aria-checked="true" title="Exact Case: requires typing exact uppercase and lowercase letters">Exact (Aa)</button>
+          <button type="button" class="case-pill" data-case="ignore" role="radio" aria-checked="false" title="Ignore Case: P and p are both accepted as correct">Ignore (aa)</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- REAL-TIME STATS DASHBOARD -->
+    <section class="dashboard-grid" aria-label="Live Typing Statistics">
+      <!-- WPM Card -->
+      <div class="stat-card" id="card-wpm">
+        <div class="stat-header">
+          <span class="stat-title">Typing Speed</span>
+          <span class="stat-badge wpm-badge">WPM</span>
+        </div>
+        <div class="stat-value-row">
+          <span class="stat-number" id="stat-wpm">0</span>
+          <span class="stat-unit">words/min</span>
+        </div>
+        <div class="stat-hint">Calculated per 5 chars typed</div>
+      </div>
+
+      <!-- Accuracy Card -->
+      <div class="stat-card" id="card-accuracy">
+        <div class="stat-header">
+          <span class="stat-title">Accuracy</span>
+          <span class="stat-badge accuracy-badge">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+          </span>
+        </div>
+        <div class="stat-value-row">
+          <span class="stat-number" id="stat-accuracy">100%</span>
+          <span class="stat-unit">precision</span>
+        </div>
+        <div class="stat-hint">Correct ÷ Total inputs</div>
+      </div>
+
+      <!-- Timer Card -->
+      <div class="stat-card" id="card-timer">
+        <div class="stat-header">
+          <span class="stat-title">Time Left</span>
+          <span class="stat-badge timer-badge">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </span>
+        </div>
+        <div class="stat-value-row">
+          <span class="stat-number font-mono" id="stat-timer">01:00</span>
+          <span class="stat-unit">countdown</span>
+        </div>
+        <div class="stat-hint">Starts on first keypress</div>
+      </div>
+
+      <!-- Correct Characters Card -->
+      <div class="stat-card" id="card-correct">
+        <div class="stat-header">
+          <span class="stat-title">Correct Chars</span>
+          <span class="stat-badge correct-badge">✓</span>
+        </div>
+        <div class="stat-value-row">
+          <span class="stat-number" id="stat-correct">0 / 0</span>
+          <span class="stat-unit">characters</span>
+        </div>
+        <div class="stat-hint">Progress through text</div>
+      </div>
+    </section>
+
+    <!-- PROGRESS BAR -->
+    <div class="progress-bar-track" title="Typing progress through passage">
+      <div id="typing-progress-bar" class="progress-bar-fill"></div>
+    </div>
+
+    <!-- MAIN TYPING PRACTICE AREA -->
+    <main class="practice-card">
+      <!-- Card Top Bar: Topic & Difficulty info -->
+      <div class="practice-card-header">
+        <div class="practice-meta-left">
+          <span class="badge topic-tag" id="topic-badge">General Passage</span>
+          <span class="badge difficulty-tag diff-intermediate" id="difficulty-badge">INTERMEDIATE</span>
+          <!-- Dynamic Shift Key Helper & CapsLock Warning -->
+          <span id="shift-key-hint" class="badge key-hint-badge" style="display: none;">⇧ Shift + P</span>
+          <span id="caps-lock-warning" class="badge caps-lock-badge" style="display: none;">⇪ Caps Lock ON</span>
+        </div>
+        <div class="practice-meta-right">
+          <span class="shortcut-tip">Tip: Press <kbd>Esc</kbd> anytime to restart</span>
+        </div>
+      </div>
+
+      <!-- Practice Text Container -->
+      <div class="practice-viewport" id="practice-container" tabindex="0" role="region" aria-label="Practice text area">
+        <!-- Floating Caret -->
+        <div id="active-caret" class="typing-caret" aria-hidden="true"></div>
+
+        <!-- Rendered Text Characters -->
+        <div id="text-display" class="typing-text-display" aria-live="polite">
+          <!-- Spans populated by JS -->
+        </div>
+
+        <!-- Native hidden input to capture keystrokes on desktop & mobile keyboards -->
+        <input 
+          type="text" 
+          id="hidden-typing-input" 
+          class="hidden-input" 
+          autocomplete="off" 
+          autocapitalize="off" 
+          spellcheck="false" 
+          aria-label="Type the text displayed above"
+        >
+
+        <!-- Focus Prompt Overlay (shows when input is blurred) -->
+        <div id="focus-overlay" class="focus-notice-overlay hidden">
+          <div class="focus-notice-box">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="4" width="20" height="16" rx="2"/>
+              <path d="M6 8h.001M10 8h.001M14 8h.001M18 8h.001M7 16h10"/>
+            </svg>
+            <span>Click here or press any key to focus</span>
+          </div>
+        </div>
+
+        <!-- Pause Overlay -->
+        <div id="pause-overlay" class="pause-notice-overlay">
+          <div class="pause-box">
+            <div class="pause-icon-pulse">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="10" y1="15" x2="10" y2="9"/>
+                <line x1="14" y1="15" x2="14" y2="9"/>
+              </svg>
+            </div>
+            <h3>Test Paused</h3>
+            <p>Your timer and typing progress are frozen.</p>
+            <button id="btn-resume-test" class="btn btn-primary btn-glow">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              Resume Test (Space)
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons Control Bar -->
+      <footer class="practice-controls-bar">
+        <div class="controls-left">
+          <button id="btn-start-test" class="btn btn-primary" title="Start timer and focus text">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            Start Test
+          </button>
+
+          <button id="btn-restart-test" class="btn btn-secondary" title="Restart test from beginning (Esc)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+            Restart
+          </button>
+
+          <button id="btn-new-text" class="btn btn-secondary" title="Load a new random practice paragraph">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
+            New Text
+          </button>
+
+          <button id="btn-pause-test" class="btn btn-secondary" disabled title="Pause or Resume test (Alt + P)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+            Pause
+          </button>
+        </div>
+
+        <div class="controls-right">
+          <span class="protection-badge" title="Pasting text is disabled to enforce authentic practice">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Anti-Paste Shield Active
+          </span>
+        </div>
+      </footer>
+    </main>
+
+    <!-- FOOTER INFO & SHORTCUTS -->
+    <footer class="app-footer">
+      <div class="footer-shortcuts">
+        <span><kbd>Esc</kbd> Quick Restart</span>
+        <span class="shortcut-sep">•</span>
+        <span><kbd>Alt</kbd> + <kbd>P</kbd> Pause/Resume</span>
+        <span class="shortcut-sep">•</span>
+        <span><kbd>Enter</kbd> Next Test (Results)</span>
+      </div>
+      <div class="footer-credits">
+        <span>TypeSprint — Crafted for speed, precision, and muscle memory</span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- RESULTS MODAL -->
+  <div id="results-modal" class="modal-backdrop" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modal-results-title">
+    <div class="modal-window result-window">
+      <button id="btn-close-result" class="modal-close-btn" aria-label="Close results">&times;</button>
+      
+      <div class="result-header">
+        <div class="celebration-badge-wrap">
+          <span class="celebration-icon">⚡</span>
+        </div>
+        <div class="result-heading-box">
+          <div class="tier-tag-row">
+            <span id="result-tier-badge" class="tier-pill">PRO SPRINTER</span>
+            <span id="result-new-best-tag" class="new-record-pill" style="display: none;">🎉 NEW PERSONAL BEST!</span>
+          </div>
+          <h2 id="modal-results-title" class="result-title">Test Completed!</h2>
+        </div>
+      </div>
+
+      <!-- Hero Metrics Highlight -->
+      <div class="result-hero-stats">
+        <div class="hero-stat-card primary-hero">
+          <span class="hero-stat-label">Typing Speed</span>
+          <div class="hero-stat-val">
+            <span id="result-final-wpm">0</span>
+            <span class="hero-stat-unit">WPM</span>
+          </div>
+        </div>
+
+        <div class="hero-stat-card secondary-hero">
+          <span class="hero-stat-label">Accuracy</span>
+          <div class="hero-stat-val">
+            <span id="result-final-accuracy">100%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Detailed Metrics Grid -->
+      <div class="result-details-grid">
+        <div class="detail-box">
+          <span class="detail-label">Total Typed</span>
+          <strong id="result-total-chars" class="detail-val">0</strong>
+        </div>
+        <div class="detail-box">
+          <span class="detail-label">Correct Chars</span>
+          <strong id="result-correct-chars" class="detail-val color-success">0</strong>
+        </div>
+        <div class="detail-box">
+          <span class="detail-label">Incorrect Chars</span>
+          <strong id="result-incorrect-chars" class="detail-val color-danger">0</strong>
+        </div>
+        <div class="detail-box">
+          <span class="detail-label">Test Duration</span>
+          <strong id="result-duration" class="detail-val">60s</strong>
+        </div>
+      </div>
+
+      <!-- WPM Over Time Progression Graph -->
+      <div class="result-chart-section">
+        <div class="chart-header">
+          <span class="chart-title">Speed Progression (WPM / sec)</span>
+        </div>
+        <div id="wpm-sparkline-container" class="chart-render-box"></div>
+      </div>
+
+      <!-- Motivational Feedback Box -->
+      <div class="motivational-banner">
+        <span class="quote-icon">💡</span>
+        <p id="result-motivational-msg" class="motivational-text">
+          Outstanding rhythm! Focus on maintaining accuracy above 95% to push your speed even higher.
+        </p>
+      </div>
+
+      <!-- Modal Footer Actions -->
+      <div class="modal-action-row">
+        <button id="btn-try-again" class="btn btn-primary btn-glow">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+          Try Again (Enter)
+        </button>
+
+        <button id="btn-next-test" class="btn btn-secondary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="9 18 15 12 9 6"/></svg>
+          Next Passage
+        </button>
+
+        <button id="btn-share-result" class="btn btn-secondary" title="Copy score card to clipboard">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Share Score
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- INSTRUCTIONS & BEGINNER GUIDE MODAL -->
+  <div id="instructions-modal" class="modal-backdrop" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modal-guide-title">
+    <div class="modal-window guide-window">
+      <button id="btn-close-instructions" class="modal-close-btn" aria-label="Close guide">&times;</button>
+      
+      <div class="guide-header">
+        <div class="guide-icon-badge">⌨️</div>
+        <div>
+          <h2 id="modal-guide-title" class="guide-title">Touch Typing Mastery Guide</h2>
+          <p class="guide-subtitle">Fundamental techniques to double your typing speed and eliminate strain.</p>
+        </div>
+      </div>
+
+      <div class="guide-content-scroll">
+        <!-- Section 1: Home Row -->
+        <div class="guide-card">
+          <h3 class="guide-section-heading">1. The Home Row Anchor</h3>
+          <p>Always return your index fingers to the home row keys with small physical tactile bumps: <strong>F</strong> (Left Hand) and <strong>J</strong> (Right Hand).</p>
+          <div class="keyboard-visual">
+            <div class="hand-row">
+              <span class="key-pill pinky">A</span>
+              <span class="key-pill ring">S</span>
+              <span class="key-pill middle">D</span>
+              <span class="key-pill index">F</span>
+              <span class="key-pill spacer">· · ·</span>
+              <span class="key-pill index">J</span>
+              <span class="key-pill middle">K</span>
+              <span class="key-pill ring">L</span>
+              <span class="key-pill pinky">;</span>
+            </div>
+          </div>
+          <div class="hand-legend">
+            <span class="legend-item"><span class="dot pinky-dot"></span> Pinky</span>
+            <span class="legend-item"><span class="dot ring-dot"></span> Ring</span>
+            <span class="legend-item"><span class="dot middle-dot"></span> Middle</span>
+            <span class="legend-item"><span class="dot index-dot"></span> Index</span>
+          </div>
+        </div>
+
+        <!-- Section 2: Golden Principles -->
+        <div class="guide-card">
+          <h3 class="guide-section-heading">2. Golden Practice Rules</h3>
+          <ul class="guide-rules-list">
+            <li><strong>Accuracy Before Speed:</strong> Speed is a natural byproduct of precision. Aim for 96%+ accuracy.</li>
+            <li><strong>Eyes on the Screen:</strong> Never look down at your keyboard. Trust your fingers' spatial memory.</li>
+            <li><strong>Consistent Rhythm:</strong> Type like a metronome with uniform cadence rather than bursting and pausing.</li>
+            <li><strong>Ergonomic Posture:</strong> Keep your wrists slightly elevated and your back straight to prevent strain.</li>
+          </ul>
+        </div>
+
+        <!-- Section 3: Shortcuts -->
+        <div class="guide-card">
+          <h3 class="guide-section-heading">3. Quick Keyboard Shortcuts</h3>
+          <div class="shortcuts-grid">
+            <div class="shortcut-item">
+              <kbd>Esc</kbd>
+              <span>Instant restart of the current test</span>
+            </div>
+            <div class="shortcut-item">
+              <kbd>Alt + P</kbd>
+              <span>Pause / Resume the active test</span>
+            </div>
+            <div class="shortcut-item">
+              <kbd>Space</kbd>
+              <span>Resume when test is paused</span>
+            </div>
+            <div class="shortcut-item">
+              <kbd>Enter</kbd>
+              <span>Start new test on results modal</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TEST HISTORY MODAL -->
+  <div id="history-modal" class="modal-backdrop" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modal-history-title">
+    <div class="modal-window history-window">
+      <button id="btn-close-history" class="modal-close-btn" aria-label="Close history">&times;</button>
+      
+      <div class="modal-header-simple">
+        <div>
+          <h2 id="modal-history-title" class="modal-simple-title">Your Practice History</h2>
+          <p class="modal-simple-sub">Track your progress and speed improvements over time.</p>
+        </div>
+        <button id="btn-clear-history" class="btn btn-outline-danger btn-sm" title="Clear all saved test history">
+          Clear History
+        </button>
+      </div>
+
+      <div class="history-table-container">
+        <table class="history-table">
+          <thead>
+            <tr>
+              <th>Date & Time</th>
+              <th>Speed</th>
+              <th>Accuracy</th>
+              <th>Difficulty</th>
+              <th>Duration</th>
+            </tr>
+          </thead>
+          <tbody id="history-table-body">
+            <!-- Populated dynamically by JavaScript -->
+          </tbody>
+        </table>
+        
+        <div id="history-empty-state" class="empty-history-box" style="display: none;">
+          <p>No tests recorded yet! Complete your first test to see your history.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOATING TOAST NOTIFICATION -->
+  <div id="toast-notification" class="toast-popup" role="status" aria-live="polite"></div>
+
+  <!-- SCRIPT LOADING ORDER -->
+  <!-- 1. Text Library (60+ passages across 3 difficulties) -->
+  <script src="js/texts.js"></script>
+  <!-- 2. Pure Web Audio Synthesizer (Realistic mechanical audio) -->
+  <script src="js/sound.js"></script>
+  <!-- 3. LocalStorage Persistence Manager -->
+  <script src="js/storage.js"></script>
+  <!-- 4. Core Application Engine -->
+  <script src="js/app.js"></script>
+</body>
+</html>
